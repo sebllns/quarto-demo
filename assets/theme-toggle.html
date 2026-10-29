@@ -23,9 +23,13 @@
   html.dark .reveal a {
     color: var(--r-link-color);
   }
-  html.dark .reveal div.sourceCode,
+  /* Light code blocks in both modes, so the default highlight stays readable */
+  .reveal div.sourceCode,
+  .reveal pre code {
+    background-color: #faf6ec;
+  }
   html.dark .reveal pre code {
-    background-color: #2b2b2b;
+    color: #003b4f;
   }
   html.dark .reveal .callout {
     background-color: #262626;
