@@ -26,7 +26,45 @@
   html.dark .reveal div.sourceCode,
   html.dark .reveal pre code {
     background-color: #2b2b2b;
+    color: #e6e6e6;
   }
+  html.dark .reveal :not(pre) > code {
+    background-color: #2b2b2b;
+    color: #e6e6e6;
+  }
+  html.dark .reveal pre > code.sourceCode > span > a:first-child::before {
+    color: #6e7681;
+  }
+  /* Pandoc token classes, GitHub dark palette */
+  html.dark .reveal code span.kw,
+  html.dark .reveal code span.cf,
+  html.dark .reveal code span.pp { color: #ff7b72; }
+  html.dark .reveal code span.dt,
+  html.dark .reveal code span.bu,
+  html.dark .reveal code span.im,
+  html.dark .reveal code span.va { color: #ffa657; }
+  html.dark .reveal code span.dv,
+  html.dark .reveal code span.bn,
+  html.dark .reveal code span.fl,
+  html.dark .reveal code span.cn,
+  html.dark .reveal code span.at { color: #79c0ff; }
+  html.dark .reveal code span.st,
+  html.dark .reveal code span.ch,
+  html.dark .reveal code span.ss,
+  html.dark .reveal code span.vs,
+  html.dark .reveal code span.sc { color: #a5d6ff; }
+  html.dark .reveal code span.co,
+  html.dark .reveal code span.do,
+  html.dark .reveal code span.cv,
+  html.dark .reveal code span.an,
+  html.dark .reveal code span.in,
+  html.dark .reveal code span.wa { color: #8b949e; }
+  html.dark .reveal code span.fu,
+  html.dark .reveal code span.ex { color: #d2a8ff; }
+  html.dark .reveal code span.op,
+  html.dark .reveal code span.ot { color: #e6e6e6; }
+  html.dark .reveal code span.al,
+  html.dark .reveal code span.er { color: #f85149; }
   html.dark .reveal .callout {
     background-color: #262626;
   }
