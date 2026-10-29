@@ -6,6 +6,12 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Select which formats to build
+env:
+  EXPORT_HTML: true
+  EXPORT_PDF: true
+  EXPORT_PPTX: true
+
 jobs:
   render:
     runs-on: ubuntu-24.04
@@ -23,13 +29,20 @@ jobs:
           miniforge-version: latest
 
       - name: Install TinyTeX
+        if: env.EXPORT_PDF == 'true'
         run: quarto install tinytex --no-prompt
 
-      - name: Render
-        run: |
-          quarto render talk.qmd --to revealjs -M embed-resources:true
-          quarto render talk.qmd --to beamer
-          quarto render talk.qmd --to pptx
+      - name: Render revealjs
+        if: env.EXPORT_HTML == 'true'
+        run: quarto render talk.qmd --to revealjs -M embed-resources:true
+
+      - name: Render beamer
+        if: env.EXPORT_PDF == 'true'
+        run: quarto render talk.qmd --to beamer
+
+      - name: Render pptx
+        if: env.EXPORT_PPTX == 'true'
+        run: quarto render talk.qmd --to pptx
 
       - uses: actions/upload-artifact@v4
         with:
@@ -44,8 +57,10 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           mkdir -p _site
-          cp talk.html _site/index.html
-          cp talk.pdf talk.pptx _site/
+          if [ -f talk.html ]; then cp talk.html _site/index.html; fi
+          for f in talk.pdf talk.pptx; do
+            if [ -f "$f" ]; then cp "$f" _site/; fi
+          done
 
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

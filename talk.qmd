@@ -14,6 +14,7 @@ format:
     incremental: false
     code-line-numbers: true
     chalkboard: false
+    include-after-body: assets/theme-toggle.html
   beamer:
     theme: metropolis
     aspectratio: 169
