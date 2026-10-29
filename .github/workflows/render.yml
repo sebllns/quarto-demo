@@ -61,6 +61,8 @@ jobs:
           for f in talk.pdf talk.pptx; do
             if [ -f "$f" ]; then cp "$f" _site/; fi
           done
+          # Public bundle of all built outputs
+          zip -j _site/slides.zip $(ls talk.html talk.pdf talk.pptx 2>/dev/null)
 
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
