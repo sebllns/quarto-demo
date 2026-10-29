@@ -1,0 +1,70 @@
+name: Render slides
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        # Login shell so the conda env is activated in every step
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment: quarto-slides
+          miniforge-version: latest
+
+      - name: Install TinyTeX
+        run: quarto install tinytex --no-prompt
+
+      - name: Render
+        run: |
+          quarto render talk.qmd --to revealjs -M embed-resources:true
+          quarto render talk.qmd --to beamer
+          quarto render talk.qmd --to pptx
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: slides
+          path: |
+            talk.html
+            talk.pdf
+            talk.pptx
+          if-no-files-found: error
+
+      - name: Prepare Pages site
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p _site
+          cp talk.html _site/index.html
+          cp talk.pdf talk.pptx _site/
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          path: _site
+
+  deploy:
+    needs: render
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
